@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import EditProduct from "./EditProduct";
 
 function ProductList(props) {
     const { reload } = props;
-
     const [data, setData] = useState([]);
+    const [editReload, setEditReload] = useState(false);
 
     useEffect(() => {
         const fetchApi = async () => {
@@ -14,7 +15,14 @@ function ProductList(props) {
                 })
         }
         fetchApi();
-    }, [reload]);
+    }, [reload, editReload]);
+
+    const handleReload = () => {
+        setEditReload(!editReload);
+    }
+
+    // 1h37
+
     return(
         <>
             <div className="product__change">
@@ -30,7 +38,7 @@ function ProductList(props) {
                             <p className="product__discountPercentage">${item.discountPercentage}%</p>
                         </div>
                         <div className="product__change">
-                            <button>Edit</button>
+                            <EditProduct onReload={handleReload} item={item}/>
                             <button>Delete</button>
                         </div>
                     </div>

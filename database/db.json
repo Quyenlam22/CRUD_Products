@@ -1798,12 +1798,13 @@
     },
     {
       "id": "503f",
-      "title": "Game Product",
+      "title": "Game",
       "price": "100",
       "discountPercentage": "2",
       "stock": "20",
       "thumbnail": "https://th.bing.com/th/id/OIP.h3U-yGZNxT8PkF5vlRnnxgHaEK?cb=iwc2&rs=1&pid=ImgDetMain",
-      "description": "Desc"
+      "description": "Desc",
+      "category": "Womens Bags"
     }
   ],
   "categories": [
