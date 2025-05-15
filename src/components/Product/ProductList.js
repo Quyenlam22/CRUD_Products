@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-function ProductList() {
+function ProductList(props) {
+    const { reload } = props;
+
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -8,11 +10,11 @@ function ProductList() {
             fetch(`http://localhost:3003/products`)
                 .then(res => res.json())
                 .then(data => {
-                    setData(data);
+                    setData(data.reverse());
                 })
         }
         fetchApi();
-    }, []);
+    }, [reload]);
     return(
         <>
             <div className="product__change">
