@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Modal from 'react-modal';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+import { getCategoryList } from "../../services/CategoryService";
+import { createProduct } from "../../services/ProductService";
 
 function CreateProduct(props) {
     const { onReload } = props;
@@ -11,11 +13,8 @@ function CreateProduct(props) {
 
     useEffect(() => {
         const fetchApi = async () => {
-            fetch(`http://localhost:3003/categories`)
-                .then(res => res.json())
-                .then(data => {
-                    setDataCategory(data);
-                })
+            const result = await getCategoryList();
+            setDataCategory(result);
         }
         fetchApi();
     }, []);
@@ -39,30 +38,21 @@ function CreateProduct(props) {
         setShowModal(false);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch(`http://localhost:3003/products`, {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(data => {
-                if(data) {
-                    setShowModal(false);
-                    onReload();
-                    Swal.fire({
-                        // position: "center",
-                        icon: "success",
-                        title: "Thêm sản phẩm thành công!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            })
+
+        const result = await createProduct(data);
+        if(result) {
+            setShowModal(false);
+            onReload();
+            Swal.fire({
+                // position: "center",
+                icon: "success",
+                title: "Thêm sản phẩm thành công!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
     }
 
     const handleChange = (e) => {

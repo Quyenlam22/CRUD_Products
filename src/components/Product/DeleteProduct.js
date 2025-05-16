@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+import { deleteProduct } from '../../services/ProductService';
 
 function DeleteProduct(props) {
     const { item, onReload } = props;
-    const [data, setData] = useState(item);
 
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-        },
-    };
+    const deleteItem = async () => {
+        const result = await deleteProduct(item.id);
+        if(result) {
+            onReload();
+            Swal.fire({
+                title: "Thành công!",
+                text: "Sản phẩm đã được xóa!",
+                icon: "success"
+            });
+        }
+    }
 
     const handleDelete = () => {
         Swal.fire({
@@ -29,20 +29,7 @@ function DeleteProduct(props) {
             cancelButtonText: "Hủy"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:3003/products/${item.id}`, {
-                    method: "DELETE"
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if(data) {
-                            onReload();
-                            Swal.fire({
-                                title: "Thành công!",
-                                text: "Sản phẩm đã được xóa!",
-                                icon: "success"
-                            });
-                        }
-                    })
+                deleteItem();
             }
         });
     }

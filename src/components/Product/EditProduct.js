@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Modal from 'react-modal';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import 'sweetalert2/src/sweetalert2.scss';
+import { getCategoryList } from "../../services/CategoryService";
+import { editProduct } from "../../services/ProductService";
 
 function EditProduct(props) {
     const { item, onReload } = props;
@@ -11,11 +13,8 @@ function EditProduct(props) {
 
     useEffect(() => {
         const fetchApi = async () => {
-            fetch(`http://localhost:3003/categories`)
-                .then(res => res.json())
-                .then(data => {
-                    setDataCategory(data);
-                })
+            const result = await getCategoryList();
+            setDataCategory(result);
         }
         fetchApi();
     }, []);
@@ -39,30 +38,20 @@ function EditProduct(props) {
         setShowModal(false);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        fetch(`http://localhost:3003/products/${item.id}`, {
-            method: "PATCH",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(data => {
-                if(data) {
-                    setShowModal(false);
-                    onReload();
-                    Swal.fire({
-                        // position: "center",
-                        icon: "success",
-                        title: "Cập nhật sản phẩm thành công!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            })
+        const result = await editProduct(data, item.id)
+        if(result) {
+            setShowModal(false);
+            onReload();
+            Swal.fire({
+                // position: "center",
+                icon: "success",
+                title: "Cập nhật sản phẩm thành công!",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
     }
 
     const handleChange = (e) => {
@@ -95,9 +84,9 @@ function EditProduct(props) {
                                     <tr>
                                         <td>Danh mục</td>
                                         <td>
-                                            <select name="category" onChange={handleChange}>
-                                                {dataCategory.map((item, index) => (
-                                                    <option key={index} value={data.name}>{item.name}</option>
+                                            <select name="category" onChange={handleChange} value={data.category}>
+                                                {dataCategory.map((item) => (
+                                                    <option key={item.id} value={item.id}>{item.name}</option>
                                                 ))}
                                             </select>
                                         </td>
