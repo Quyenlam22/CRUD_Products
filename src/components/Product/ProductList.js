@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EditProduct from "./EditProduct";
+import DeleteProduct from "./DeleteProduct";
 
 function ProductList(props) {
     const { reload } = props;
@@ -21,7 +22,7 @@ function ProductList(props) {
         setEditReload(!editReload);
     }
 
-    // 1h37
+    // 1.45
 
     return(
         <>
@@ -39,7 +40,7 @@ function ProductList(props) {
                         </div>
                         <div className="product__change">
                             <EditProduct onReload={handleReload} item={item}/>
-                            <button>Delete</button>
+                            <DeleteProduct onReload={handleReload} item={item}/>
                         </div>
                     </div>
                 ))}
